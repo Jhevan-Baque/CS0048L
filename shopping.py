@@ -1,5 +1,3 @@
-# Online Shopping Cart
-
 class Product:
     def __init__(self, name, price, quantity):
         self.name = name
@@ -91,6 +89,7 @@ def main():
             if not cart.products:
                 print("\nCart is empty.")
                 continue
+
             print("\n[Products in Cart]")
             for i, p in enumerate(cart.products, 1):
                 print(f"{i}. {p.name} ({p.quantity} x ₱{p.price:.2f})")
