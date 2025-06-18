@@ -1,21 +1,70 @@
-# Library Management System
-
-class Library:
-    def __init__ (self, title, author, availability):
+class Book:
+    def __init__(self, title, author, availability):
         self.title = title
         self.author = author
         self.availability = int(availability)
 
-    def BorrowBook(self, title):
-        print("Borrowing..." + title + " Book.")
+    def borrow(self):
         if self.availability > 0:
             self.availability -= 1
-            print("Successfully Borrowed!")
-    def returnBook(self, title):
-        print("Returned..." + title + " Book.")
+            print(f"\nSuccessfully borrowed '{self.title}'!")
+        else:
+            print(f"\nSorry, '{self.title}' is currently not available.")
+
+    def return_book(self):
         self.availability += 1
-    def BookAvailable(self):
-        print("Book Available...")
+        print(f"\nReturned '{self.title}' successfully.")
+
+    def display(self):
+        print(f"Title: {self.title}")
+        print(f"Author: {self.author}")
+        print(f"Available Copies: {self.availability}")
+        print("-" * 20)
+
+
+class Library:
+    def __init__(self):
+        self.books = []
+
+    def add_book(self, book):
+        self.books.append(book)
+        print(f"\nBook '{book.title}' added successfully!")
+
+    def list_books(self):
+        if not self.books:
+            print("\nNo books in the library yet.")
+            return False
+        for idx, book in enumerate(self.books, 1):
+            print(f"{idx}. {book.title} by {book.author} - {book.availability} copies")
+        return True
+
+    def borrow_book(self):
+        if not self.list_books():
+            return
+        choice = input("Enter the number of the book to borrow: ")
+        if choice.isdigit() and 1 <= int(choice) <= len(self.books):
+            self.books[int(choice)-1].borrow()
+        else:
+            print("Invalid selection.")
+
+    def return_book(self):
+        if not self.list_books():
+            return
+        choice = input("Enter the number of the book to return: ")
+        if choice.isdigit() and 1 <= int(choice) <= len(self.books):
+            self.books[int(choice)-1].return_book()
+        else:
+            print("Invalid selection.")
+
+    def view_books(self):
+        if not self.books:
+            print("\nNo books to show.")
+        else:
+            print("\n[Books in Library]")
+            print("=" * 20)
+            for book in self.books:
+                book.display()
+
 
 def is_valid_number(value):
     try:
@@ -24,70 +73,48 @@ def is_valid_number(value):
     except ValueError:
         return False
 
-# input part
-def AddBook():
-    print("\n[Enter Book Information]")
-    title = input("Enter Title: ")
-    author = input("Enter Author Name: ")
-    availability = input("Enter Number of Availability: ")
-    while not is_valid_number(availability):
-        print("\nInvalid Input! Please enter a valid number.\n")
-        availability = input("Enter Number of Availability: ")
-    return title,author,availability
-
 
 def main():
-    books = []
+    library = Library()
+
     while True:
-        print("=" * 30)
+        print("\n" + "=" * 30)
         print("{:^30}".format("Library Management System"))
         print("=" * 30)
-        print("1. Add Book ")
-        print("2. Borrow Book ")
-        print("3. Return Book ")
-        print("4. View Books ")
+        print("1. Add Book")
+        print("2. Borrow Book")
+        print("3. Return Book")
+        print("4. View Books")
         print("5. Exit")
 
-        choice = input("Enter your choice 1-5: ")
+        choice = input("Enter your choice (1-5): ")
 
         if choice == "1":
-            title, author, availability = AddBook()
-            books.append(Library(title, author, availability))
-            print("\nBook: "+ title + " Added Successfully!")
+            print("\n[Enter Book Information]")
+            title = input("Enter Title: ")
+            author = input("Enter Author: ")
+            availability = input("Enter Number of Copies: ")
+            while not is_valid_number(availability):
+                print("Invalid input! Please enter a number.")
+                availability = input("Enter Number of Copies: ")
+            new_book = Book(title, author, availability)
+            library.add_book(new_book)
 
         elif choice == "2":
-            for i, book in enumerate(books, 1):
-                print(f"{i}: {book.title}")
-
-            enteredSelection = int(input("Select Book you want to borrow: "))
-            for i, book in enumerate(books, 1):
-                if int(i) == enteredSelection:
-                    book.BorrowBook(book.title)
+            library.borrow_book()
 
         elif choice == "3":
-            for i, book in enumerate(books, 1):
-                print(f"{i}: {book.title}")
-
-            enteredSelection = int(input("Select Book you want to Return: "))
-            for i, book in enumerate(books, 1):
-                if int(i) == enteredSelection:
-                    book.returnBook(book.title)
+            library.return_book()
 
         elif choice == "4":
-            if not books:
-                print("\nNo Books Available!")
-            else:
-                print("\n[Books in Library]\n")
-                print("=" * 20)
-                for book in books:
-                    print(f"Book: {book.title}\nAuthor: {book.author}\nAvailability: {str(book.availability)}")
-                    print("=" * 20)
+            library.view_books()
+
         elif choice == "5":
-            print("Exit Program")
+            print("Exiting program...")
             break
 
         else:
-            print("Invalid choice")
+            print("Invalid choice. Please try again.")
 
 
 if __name__ == "__main__":
