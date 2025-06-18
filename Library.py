@@ -1,5 +1,3 @@
-# Library Management System (Improved Version)
-
 class Book:
     def __init__(self, title, author, copies):
         self.title = title
@@ -33,7 +31,6 @@ class Library:
         self.books = []
 
     def add_book(self, new_book):
-        # Check for duplicate by title & author (case-insensitive)
         for book in self.books:
             if book.title.lower() == new_book.title.lower() and book.author.lower() == new_book.author.lower():
                 print(f"\nBook '{new_book.title}' by {new_book.author} already exists. Adding more copies...")
