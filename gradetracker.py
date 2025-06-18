@@ -22,6 +22,29 @@ class Student:
                 print(f"{subject}: {grade}")
             print(f"Average: {self.calculate_average():.2f}")
 
+
+class GradeTracker:
+    def __init__(self):
+        self.students = []
+
+    def add_student(self, name):
+        student = Student(name)
+        self.students.append(student)
+        return student
+
+    def get_student_by_index(self, index):
+        if 0 <= index < len(self.students):
+            return self.students[index]
+        return None
+
+    def display_all_students(self):
+        for i, student in enumerate(self.students, 1):
+            print(f"{i}. {student.name}")
+
+    def has_students(self):
+        return len(self.students) > 0
+
+
 def is_valid_grade(value):
     try:
         float(value)
@@ -29,21 +52,10 @@ def is_valid_grade(value):
     except ValueError:
         return False
 
-def AddStudent():
-    print("\n[Add Student]")
-    name = input("Enter Student Name: ")
-    return Student(name)
-
-def AddGrade(student):
-    subject = input("Enter Subject Name: ")
-    grade = input(f"Enter Grade for {subject}: ")
-    while not is_valid_grade(grade):
-        print("Invalid input. Please enter a valid number.")
-        grade = input(f"Enter Grade for {subject}: ")
-    student.add_grade(subject, grade)
 
 def main():
-    students = []
+    tracker = GradeTracker()
+
     while True:
         print("=" * 30)
         print("{:^30}".format("Student Grade Tracker"))
@@ -57,47 +69,67 @@ def main():
         choice = input("Enter your choice (1-5): ")
 
         if choice == "1":
-            student = AddStudent()
-            students.append(student)
-            print(f"\nStudent {student.name} added successfully!")
+            name = input("Enter Student Name: ")
+            tracker.add_student(name)
+            print(f"Student '{name}' added successfully!")
 
         elif choice == "2":
-            if not students:
-                print("\nNo students available. Please add a student first.")
+            if not tracker.has_students():
+                print("No students available. Add a student first.")
                 continue
-            for i, student in enumerate(students, 1):
-                print(f"{i}. {student.name}")
-            selected = input("Select student to add grade: ")
-            if selected.isdigit() and 1 <= int(selected) <= len(students):
-                AddGrade(students[int(selected)-1])
+            print("\n[Select Student]")
+            tracker.display_all_students()
+            selected = input("Enter number: ")
+            if selected.isdigit():
+                index = int(selected) - 1
+                student = tracker.get_student_by_index(index)
+                if student:
+                    subject = input("Enter Subject: ")
+                    grade = input("Enter Grade: ")
+                    while not is_valid_grade(grade):
+                        print("Invalid input. Enter a valid number.")
+                        grade = input("Enter Grade: ")
+                    student.add_grade(subject, grade)
+                else:
+                    print("Invalid selection.")
             else:
-                print("Invalid selection.")
+                print("Invalid input.")
 
         elif choice == "3":
-            if not students:
-                print("\nNo students available.")
+            if not tracker.has_students():
+                print("No students available.")
                 continue
-            for i, student in enumerate(students, 1):
-                print(f"{i}. {student.name}")
-            selected = input("Select student to view grades: ")
-            if selected.isdigit() and 1 <= int(selected) <= len(students):
-                print(f"\nGrades for {students[int(selected)-1].name}:")
-                students[int(selected)-1].display_grades()
+            print("\n[Select Student]")
+            tracker.display_all_students()
+            selected = input("Enter number: ")
+            if selected.isdigit():
+                index = int(selected) - 1
+                student = tracker.get_student_by_index(index)
+                if student:
+                    print(f"\nGrades for {student.name}:")
+                    student.display_grades()
+                else:
+                    print("Invalid selection.")
             else:
-                print("Invalid selection.")
+                print("Invalid input.")
 
         elif choice == "4":
-            if not students:
-                print("\nNo students available.")
+            if not tracker.has_students():
+                print("No students available.")
                 continue
-            for i, student in enumerate(students, 1):
-                print(f"{i}. {student.name}")
-            selected = input("Select student to calculate average: ")
-            if selected.isdigit() and 1 <= int(selected) <= len(students):
-                avg = students[int(selected)-1].calculate_average()
-                print(f"\nAverage grade for {students[int(selected)-1].name}: {avg:.2f}")
+            print("\n[Select Student]")
+            tracker.display_all_students()
+            selected = input("Enter number: ")
+            if selected.isdigit():
+                index = int(selected) - 1
+                student = tracker.get_student_by_index(index)
+                if student:
+                    avg = student.calculate_average()
+                    print(f"\nAverage grade for {student.name}: {avg:.2f}")
+                else:
+                    print("Invalid selection.")
             else:
-                print("Invalid selection.")
+                print("Invalid input.")
 
         elif choice == "5":
             print("Exit Program")
@@ -105,6 +137,7 @@ def main():
 
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
