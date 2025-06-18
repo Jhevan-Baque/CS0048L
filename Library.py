@@ -1,24 +1,28 @@
 class Book:
-    def __init__(self, title, author, availability):
+    def __init__(self, title, author, copies):
         self.title = title
         self.author = author
-        self.availability = int(availability)
+        self.total_copies = int(copies)
+        self.available_copies = int(copies)
 
     def borrow(self):
-        if self.availability > 0:
-            self.availability -= 1
+        if self.available_copies > 0:
+            self.available_copies -= 1
             print(f"\nSuccessfully borrowed '{self.title}'!")
         else:
             print(f"\nSorry, '{self.title}' is currently not available.")
 
     def return_book(self):
-        self.availability += 1
-        print(f"\nReturned '{self.title}' successfully.")
+        if self.available_copies < self.total_copies:
+            self.available_copies += 1
+            print(f"\nReturned '{self.title}' successfully.")
+        else:
+            print(f"\nAll copies of '{self.title}' are already in the library. Cannot return more than total.")
 
     def display(self):
         print(f"Title: {self.title}")
         print(f"Author: {self.author}")
-        print(f"Available Copies: {self.availability}")
+        print(f"Available: {self.available_copies} / {self.total_copies}")
         print("-" * 20)
 
 
