@@ -1,12 +1,10 @@
-# Student Grade Tracker (Improved with duplicate checks)
-
 class Student:
     def __init__(self, name):
         self.name = name
-        self.grades = {}  # subject (original casing): grade
+        self.grades = {}
 
     def add_grade(self, subject, grade):
-        # Check if subject already exists (case-insensitive)
+        # Check if subject already exists
         for existing_subject in self.grades:
             if existing_subject.lower() == subject.lower():
                 print(f"Grade for subject '{existing_subject}' already exists. Updating grade...")
