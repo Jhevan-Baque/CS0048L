@@ -1,11 +1,18 @@
-# Student Grade Tracker
+# Student Grade Tracker (Improved with duplicate checks)
 
 class Student:
     def __init__(self, name):
         self.name = name
-        self.grades = {}  # subject: grade
+        self.grades = {}  # subject (original casing): grade
 
     def add_grade(self, subject, grade):
+        # Check if subject already exists (case-insensitive)
+        for existing_subject in self.grades:
+            if existing_subject.lower() == subject.lower():
+                print(f"Grade for subject '{existing_subject}' already exists. Updating grade...")
+                self.grades[existing_subject] = float(grade)
+                return
+        # Add new subject
         self.grades[subject] = float(grade)
         print(f"Added grade for {self.name} in {subject}: {grade}")
 
@@ -28,8 +35,12 @@ class GradeTracker:
         self.students = []
 
     def add_student(self, name):
+        if any(student.name.lower() == name.lower() for student in self.students):
+            print(f"Student '{name}' already exists.")
+            return None
         student = Student(name)
         self.students.append(student)
+        print(f"Student '{name}' added successfully!")
         return student
 
     def get_student_by_index(self, index):
@@ -69,9 +80,8 @@ def main():
         choice = input("Enter your choice (1-5): ")
 
         if choice == "1":
-            name = input("Enter Student Name: ")
+            name = input("Enter Student Name: ").strip()
             tracker.add_student(name)
-            print(f"Student '{name}' added successfully!")
 
         elif choice == "2":
             if not tracker.has_students():
@@ -84,8 +94,8 @@ def main():
                 index = int(selected) - 1
                 student = tracker.get_student_by_index(index)
                 if student:
-                    subject = input("Enter Subject: ")
-                    grade = input("Enter Grade: ")
+                    subject = input("Enter Subject: ").strip()
+                    grade = input("Enter Grade: ").strip()
                     while not is_valid_grade(grade):
                         print("Invalid input. Enter a valid number.")
                         grade = input("Enter Grade: ")
